@@ -79,26 +79,7 @@
     </div>
   </section>
 
-  <!-- AMBIENT VIDEO -->
-  <sc-if value="{{ showAmbientVideo }}" hint-placeholder-val="{{ true }}">
-  <section style="width:100%;position:relative;background:#2B3323;overflow:hidden;padding:90px 0;" data-reveal="">
-    <video data-bgvideo="1" poster="assets/mw-8.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(38px) brightness(0.7);transform:scale(1.2);"></video>
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(35,43,29,0.55),rgba(35,43,29,0.68));"></div>
-    <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 40px;display:flex;flex-wrap:wrap;gap:60px;align-items:center;justify-content:center;">
-      <div data-vidbox="1" style="position:relative;flex:0 0 auto;width:352px;max-width:100%;aspect-ratio:9/16;border-radius:8px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.4);background:#1c2216;">
-        <video autoplay="" muted="{{ isMuted }}" loop="" playsinline="" controls="{{ yes }}" preload="auto" poster="assets/mw-8.jpg" style="width:100%;height:100%;object-fit:cover;display:block;"></video>
-        <button sc-camel-on-click="{{ toggleSound }}" style="position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:8px;background:rgba(46,56,38,0.82);color:#F3F5EC;border:1px solid rgba(169,187,146,0.5);border-radius:100px;padding:9px 15px;font-family:'Mulish',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;cursor:pointer;backdrop-filter:blur(6px);flex-wrap:wrap;" style-hover="background:rgba(46,56,38,0.95);">{{ soundLabel }}</button>
-      </div>
-      <div style="flex:1 1 340px;max-width:460px;">
-        <span style="display:block;font-family:'Mulish',sans-serif;text-transform:uppercase;letter-spacing:0.24em;font-size:13px;font-weight:700;color:#A9BB92;margin-bottom:20px;">Einblick</span>
-        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:38px;color:#F3F5EC;margin:0 0 18px;line-height:1.25;">Wärme, Ruhe und wohltuende Impulse — für neue Kraft.</p>
-        <p style="font-family:'Mulish',sans-serif;font-size:17px;line-height:1.75;color:#D7DDCB;margin:0;">Ein kurzer Blick in unseren Wellnessbereich: der Ort, an dem der Alltag für einen Moment draußen bleiben darf.</p>
-      </div>
-    </div>
-  </section>
-  </sc-if>
-
-  <!-- TREATMENTS INTRO -->
+    <!-- TREATMENTS INTRO -->
   <section style="padding:110px 0 20px;">
     <div style="max-width:1240px;margin:0 auto;padding:0 40px;" data-reveal="">
       <span style="display:block;font-family:'Mulish',sans-serif;text-transform:uppercase;letter-spacing:0.24em;font-size:13px;font-weight:700;color:#8B9B7A;margin-bottom:18px;">Unsere Anwendungen</span>
@@ -322,58 +303,29 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script="" data-props="{&quot;showTopBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showAmbientVideo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;animateOnScroll&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showTopBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;animateOnScroll&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
 class Component extends DCLogic {
-  state = { soundOn: false };
   renderVals() {
     return {
       showTopBar: this.props.showTopBar ?? true,
-      showAmbientVideo: this.props.showAmbientVideo ?? true,
-      yes: true,
-      isMuted: !this.state.soundOn,
-      soundLabel: this.state.soundOn ? '🔊 Ton an' : '🔇 Ton einschalten',
-      toggleSound: (e) => {
-        const box = e.currentTarget.closest('[data-vidbox]');
-        const v = box && box.querySelector('video');
-        const on = !this.state.soundOn;
-        // Must run synchronously inside the click gesture, or the browser blocks unmuted playback.
-        if (v) {
-          v.muted = !on;
-          v.volume = 1;
-          if (on) { try { const p = v.play(); if (p && p.catch) p.catch(() => {}); } catch (_) {} }
-        }
-        this.setState({ soundOn: on });
-      },
+      animateOnScroll: this.props.animateOnScroll ?? true,
     };
   }
-  enforceMute() {
-    const bg = document.querySelector('[data-bgvideo]');
-    if (bg) { bg.muted = true; bg.volume = 0; }
-    const fg = document.querySelector('[data-vidbox] video');
-    if (fg) { fg.muted = !this.state.soundOn; }
-  }
   componentDidMount() {
-    setTimeout(() => this.enforceMute(), 90);
-    setTimeout(() => this.enforceMute(), 600);
     if (this.props.animateOnScroll === false) return;
     const run = () => {
-      const els = [...document.querySelectorAll('[data-reveal]')];
-      if (!els.length) { return; }
-      els.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(26px)';
-        el.style.transition = 'opacity .85s cubic-bezier(.22,.61,.36,1), transform .85s cubic-bezier(.22,.61,.36,1)';
-      });
+      const els = document.querySelectorAll('[data-reveal]');
+      if (!els.length) return;
       const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
+        entries.forEach((e) => {
           if (e.isIntersecting) {
-            e.target.style.opacity = '1';
+            e.target.style.opacity = 1;
             e.target.style.transform = 'none';
             io.unobserve(e.target);
           }
         });
       }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-      els.forEach(el => io.observe(el));
+      els.forEach((el) => io.observe(el));
     };
     setTimeout(run, 60);
   }
