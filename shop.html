@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop – ellevital | Gutscheine & Produkte</title>
+<meta name="description" content="Gutscheine und Produkte von ellevital in Aalen – schenken Sie Wohlbefinden oder gönnen Sie es sich selbst.">
+<link rel="canonical" href="https://www.ellevital.com/shop.html">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700&family=Jost:wght@300;400;500&family=Mulish:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Mulish', sans-serif; background: #F7F1E8; color: #322E2B; }
+    @media (max-width: 880px) {
+      [data-desktop-nav] { display: none !important; }
+      [data-hamburger] { display: flex !important; }
+    }
+    @media (min-width: 881px) {
+      [data-hamburger] { display: none !important; }
+    }
+  </style>
+</helmet>
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#5E6B50"/>
+    <text x="50" y="50" font-family="Georgia, serif" font-style="italic" font-size="46" fill="#F7F1E8" text-anchor="middle" dominant-baseline="central">e</text>
+  </svg>
+</template>
+
+<div style="background:#F7F1E8; overflow-x:hidden; min-height:100vh;">
+
+  <header style="position:sticky; top:0; z-index:50; background:rgba(247,241,232,0.88); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid #E7DFD2;">
+    <div style="max-width:1240px; margin:0 auto; padding:0 clamp(20px,4vw,48px); height:76px; display:flex; align-items:center; justify-content:space-between;flex-wrap:wrap;">
+      <a href="index.html#top" style="display:flex; align-items:center; text-decoration:none;flex-wrap:wrap;">
+        <img src="assets/ellevital-logo-new.png" alt="ellevital" style="height:56px; width:auto; display:block;">
+      </a>
+      <nav data-desktop-nav style="display:flex; align-items:center; gap:30px;flex-wrap:wrap;">
+        <a href="training.html" style="font-family:'Jost',sans-serif; font-size:16px; color:#4A463F; text-decoration:none; letter-spacing:0.3px;" style-hover="color:#5E6B50;">Training</a>
+        <a href="kurse.html" style="font-family:'Jost',sans-serif; font-size:16px; color:#4A463F; text-decoration:none; letter-spacing:0.3px;" style-hover="color:#5E6B50;">Kurse</a>
+        <a href="medical-wellness.html" style="font-family:'Jost',sans-serif; font-size:16px; color:#4A463F; text-decoration:none; letter-spacing:0.3px;" style-hover="color:#5E6B50;">Medical Wellness</a>
+        <a href="ueber-uns.html" style="font-family:'Jost',sans-serif; font-size:16px; color:#4A463F; text-decoration:none; letter-spacing:0.3px;" style-hover="color:#5E6B50;">Über uns</a>
+        <a href="shop.html" style="font-family:'Jost',sans-serif; font-size:16px; color:#5E6B50; font-weight:600; text-decoration:none; letter-spacing:0.3px;">Shop</a>
+        <a href="https://calendly.com/ellevital-info/beratungsgesprach" target="_blank" rel="noopener" style="font-family:'Mulish',sans-serif; font-weight:700; font-size:15px; color:#F7F1E8; background:#5E6B50; padding:12px 22px; border-radius:40px; text-decoration:none;" style-hover="background:#4C5740;">Beratungstermin</a>
+      </nav>
+      <button data-hamburger onClick="{{ toggleMenu }}" aria-label="Menü" style="display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:8px;">
+        <span style="width:26px; height:2px; background:#4A463F; display:block; border-radius:2px;"></span>
+        <span style="width:26px; height:2px; background:#4A463F; display:block; border-radius:2px;"></span>
+        <span style="width:26px; height:2px; background:#4A463F; display:block; border-radius:2px;"></span>
+      </button>
+    </div>
+  </header>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:60; background:#5E6B50; display:flex; flex-direction:column; padding:32px 28px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:48px;flex-wrap:wrap;">
+        <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600; font-size:30px; color:#F7F1E8;">ellevital</div>
+        <button onClick="{{ closeMenu }}" aria-label="Schließen" style="background:none; border:none; color:#F7F1E8; font-size:38px; line-height:1; cursor:pointer;">×</button>
+      </div>
+      <a href="training.html" onClick="{{ closeMenu }}" style="font-family:'Cormorant Garamond',serif; font-size:38px; color:#F7F1E8; text-decoration:none; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.15);">Training</a>
+      <a href="kurse.html" onClick="{{ closeMenu }}" style="font-family:'Cormorant Garamond',serif; font-size:38px; color:#F7F1E8; text-decoration:none; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.15);">Kurse</a>
+      <a href="medical-wellness.html" onClick="{{ closeMenu }}" style="font-family:'Cormorant Garamond',serif; font-size:38px; color:#F7F1E8; text-decoration:none; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.15);">Medical Wellness</a>
+      <a href="ueber-uns.html" onClick="{{ closeMenu }}" style="font-family:'Cormorant Garamond',serif; font-size:38px; color:#F7F1E8; text-decoration:none; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.15);">Über uns</a>
+      <a href="shop.html" onClick="{{ closeMenu }}" style="font-family:'Cormorant Garamond',serif; font-size:38px; color:#F7F1E8; text-decoration:none; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.15);">Shop</a>
+      <a href="https://calendly.com/ellevital-info/beratungsgesprach" target="_blank" rel="noopener" onClick="{{ closeMenu }}" style="margin-top:36px; font-family:'Mulish',sans-serif; font-weight:700; font-size:18px; color:#5E6B50; background:#F7F1E8; padding:18px; border-radius:40px; text-decoration:none; text-align:center;">Beratungstermin vereinbaren</a>
+    </div>
+  </sc-if>
+
+  <!-- HERO -->
+  <section style="max-width:1240px; margin:0 auto; padding:clamp(56px,7vw,96px) clamp(20px,4vw,48px) clamp(40px,5vw,60px); text-align:center;">
+    <div style="font-family:'Jost',sans-serif; font-size:14px; letter-spacing:6px; color:#7E8C6E; font-weight:500; text-transform:uppercase;">Shop</div>
+    <h1 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(38px,5.6vw,68px); line-height:1.05; margin:18px auto 0; letter-spacing:-0.5px; max-width:820px;">Gutscheine &amp; Produkte für Ihre Balance</h1>
+    <p style="font-size:18px; line-height:1.6; color:#6B635C; margin:20px auto 0; max-width:600px;">Schenken Sie Wohlbefinden – oder gönnen Sie es sich selbst. Bestellung und Bezahlung erfolgen über unseren Partner-Shop.</p>
+  </section>
+
+  <!-- CATEGORY FILTER -->
+  <div style="max-width:1240px; margin:0 auto; padding:0 clamp(20px,4vw,48px); display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+    <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="3">
+      <button onClick="{{ cat.select }}" style="font-family:'Jost',sans-serif; font-size:15px; letter-spacing:0.3px; padding:11px 22px; border-radius:40px; cursor:pointer; border:1.5px solid {{ cat.borderColor }}; background:{{ cat.bg }}; color:{{ cat.color }};">{{ cat.label }}</button>
+    </sc-for>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <section style="max-width:1240px; margin:0 auto; padding:clamp(36px,5vw,56px) clamp(20px,4vw,48px) clamp(64px,8vw,104px);">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:28px;">
+      <sc-for list="{{ visibleProducts }}" as="p" hint-placeholder-count="6">
+        <div style="background:#FFFFFF; border-radius:10px; overflow:hidden; box-shadow:0 10px 30px rgba(50,46,43,0.07); display:flex; flex-direction:column;">
+          <div style="aspect-ratio:4/3; background:{{ p.imgBg }}; display:flex; align-items:center; justify-content:center;flex-wrap:wrap;">
+            <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; color:{{ p.imgColor }};">{{ p.badge }}</span>
+          </div>
+          <div style="padding:24px 26px; display:flex; flex-direction:column; flex:1;">
+            <div style="font-family:'Jost',sans-serif; font-size:12px; letter-spacing:3px; color:#8A8077; text-transform:uppercase;">{{ p.category }}</div>
+            <h3 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:26px; margin:8px 0 8px;">{{ p.name }}</h3>
+            <p style="font-size:15px; line-height:1.55; color:#6B635C; margin:0 0 16px; flex:1;">{{ p.desc }}</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;flex-wrap:wrap;">
+              <span style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:22px; color:#322E2B;">{{ p.price }}</span>
+              <span style="font-family:'Mulish',sans-serif; font-weight:700; font-size:14px; color:#B0AA9F; background:#F1ECE2; padding:11px 20px; border-radius:40px; white-space:nowrap;">Bald verfügbar</span>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- NOTE STRIP -->
+  <div style="background:#EEEADD;">
+    <div style="max-width:820px; margin:0 auto; padding:clamp(32px,4vw,48px) clamp(20px,4vw,48px); text-align:center;">
+      <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; line-height:1.5; color:#4A463F; margin:0;">Der Online-Shop mit Bestellung &amp; Bezahlung startet in Kürze. Bis dahin erreichen Sie uns gerne persönlich.</p>
+    </div>
+  </div>
+
+  <!-- CONTACT CTA -->
+  <section style="background:#5E6B50; color:#F7F1E8;">
+    <div style="max-width:1240px; margin:0 auto; padding:clamp(48px,6vw,80px) clamp(20px,4vw,48px); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px;">
+      <div>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(28px,3.6vw,40px); margin:0; color:#FFFFFF;">Fragen zu Gutscheinen oder Produkten?</h2>
+        <p style="font-size:17px; color:#DDE1D3; margin:10px 0 0;">Rufen Sie uns an oder vereinbaren Sie ein Beratungsgespräch.</p>
+      </div>
+      <a href="https://calendly.com/ellevital-info/beratungsgesprach" target="_blank" rel="noopener" style="font-family:'Mulish',sans-serif; font-weight:700; font-size:16px; color:#5E6B50; background:#F7F1E8; padding:16px 30px; border-radius:40px; text-decoration:none; white-space:nowrap;">Beratungstermin vereinbaren</a>
+    </div>
+  </section>
+
+  <footer style="background:#322E2B; color:#CFC8BF;">
+    <div style="max-width:1240px; margin:0 auto; padding:48px clamp(20px,4vw,48px); display:flex; flex-wrap:wrap; gap:28px; align-items:center; justify-content:space-between;">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600; font-size:30px; color:#F7F1E8;">ellevital</div>
+        <div style="font-family:'Jost',sans-serif; font-size:12px; letter-spacing:5px; color:#9A9189; text-transform:uppercase; margin-top:4px;">Woman in Balance · Aalen</div>
+      </div>
+      <div style="font-size:13px; color:#8A8077; display:flex; align-items:center; gap:16px;flex-wrap:wrap;"><span>© 2026 ellevital · Eduard-Pfeifer-Straße 13, 73430 Aalen</span><a href="impressum.html" style="color:#8A8077; text-decoration:underline;">Impressum</a><a href="datenschutz.html" style="color:#8A8077; text-decoration:underline;">Datenschutz</a></div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { menuOpen: false, activeCategory: 'alle' };
+  renderVals() {
+    const allProducts = [
+      { category: 'Gutscheine', name: 'Wertgutschein 50€', desc: 'Frei einlösbar für Training, Kurse oder Medical Wellness.', price: '50 €', badge: 'Gutschein', imgBg: '#EEEADD', imgColor: '#7E8C6E' },
+      { category: 'Gutscheine', name: 'Wertgutschein 100€', desc: 'Das perfekte Geschenk für mehr Wohlbefinden.', price: '100 €', badge: 'Gutschein', imgBg: '#EEEADD', imgColor: '#7E8C6E' },
+      { category: 'Gutscheine', name: '4-Wochen-Programm Gutschein', desc: 'Schenken Sie eines unserer Wohlfühl-Programme.', price: 'ab 149 €', badge: 'Gutschein', imgBg: '#EEEADD', imgColor: '#7E8C6E' },
+      { category: 'Produkte', name: 'Bio-Kräutertee "Balance"', desc: 'Hauseigene Teemischung zur Unterstützung Ihrer Hormonbalance.', price: '14,90 €', badge: 'Tee', imgBg: '#F1E6D6', imgColor: '#8A7B68' },
+      { category: 'Produkte', name: 'Detox-Tee', desc: 'Sanfte Unterstützung für Stoffwechsel und Verdauung.', price: '14,90 €', badge: 'Tee', imgBg: '#F1E6D6', imgColor: '#8A7B68' },
+      { category: 'Produkte', name: 'Entspannungsöl', desc: 'Ätherisches Ölgemisch für Ruhe und Regeneration.', price: '19,90 €', badge: 'Pflege', imgBg: '#EBD9D2', imgColor: '#B08072' }
+    ];
+    const cats = [
+      { key: 'alle', label: 'Alle' },
+      { key: 'Gutscheine', label: 'Gutscheine' },
+      { key: 'Produkte', label: 'Produkte' }
+    ];
+    const categories = cats.map((c) => {
+      const active = this.state.activeCategory === c.key;
+      return {
+        label: c.label,
+        select: () => this.setState({ activeCategory: c.key }),
+        bg: active ? '#5E6B50' : 'transparent',
+        color: active ? '#F7F1E8' : '#5E6B50',
+        borderColor: active ? '#5E6B50' : '#B6BCA8'
+      };
+    });
+    const visibleProducts = this.state.activeCategory === 'alle'
+      ? allProducts
+      : allProducts.filter((p) => p.category === this.state.activeCategory);
+    return {
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setState((s) => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      categories,
+      visibleProducts
+    };
+  }
+}
+</script>
+</body>
+</html>
