@@ -9,60 +9,65 @@ Diese Datei ist die Orientierung für Claude Code. Bitte vor Änderungen lesen.
 
 ## 1 · Wie die Seite funktioniert
 
-Kein Build-Schritt, kein npm, kein Framework-Toolchain. Neun HTML-Dateien, ein Ordner Bilder, eine Runtime-Datei. Datei öffnen, ändern, pushen — fertig.
+Kein Build-Schritt, kein npm, kein Framework, keine Runtime. Neun HTML-Dateien und ein Ordner Bilder. Datei öffnen, ändern, pushen — fertig. Doppelklick genügt zum Ansehen, ein lokaler Server ist nicht nötig.
 
-Die Seiten nutzen eine kleine Rendering-Runtime (`support.js`), die im Browser läuft. Aufbau jeder Seite:
+Jede Seite ist eine vollständige, für sich lesbare HTML-Datei:
 
 ```html
 <!DOCTYPE html>
 <html lang="de"><head>
   <title>…</title>
   <meta name="description" content="…">
-  <script src="support.js"></script>
+  <link rel="canonical" href="https://www.ellevital.com/…">
+  <!-- Open-Graph-Angaben -->
+  <script type="application/ld+json">…</script>   <!-- strukturierte Daten -->
+  <style>…</style>                                <!-- nur a:hover, [hidden], @keyframes -->
+  <link href="…fonts.googleapis.com…">
 </head>
 <body>
-<x-dc>
-  <helmet>
-    <!-- Google-Fonts-Links, @keyframes, body-Reset -->
-  </helmet>
-  …Markup…
-</x-dc>
-<script type="text/x-dc" data-dc-script>
-class Component extends DCLogic {
-  state = { … }
-  renderVals() { return { … } }   // liefert die Werte für {{ … }}
-}
-</script>
+  …fertiges Markup, alle Texte im Klartext…
+  <script>(function(){ … })();</script>           <!-- Menü, Akkordeon, Filter -->
 </body></html>
 ```
 
-**Wichtig zu verstehen:**
+**Grundsätze:**
 
-- `{{ name }}` im Markup ist ein Platzhalter. Er wird aus dem Rückgabewert von `renderVals()` gefüllt. Nur einfache Pfade (`{{ user.name }}`), **keine Ausdrücke** — Logik gehört in `renderVals()`.
-- `<sc-for list="{{ items }}" as="item">` wiederholt seinen Inhalt pro Listeneintrag.
-- `<sc-if value="{{ flag }}">` zeigt seinen Inhalt nur, wenn `flag` wahr ist.
-- **Styling ausschließlich inline** über `style="…"`. Keine CSS-Klassen, kein Stylesheet. Pseudo-Zustände als `style-hover="…"`, `style-active="…"`, `style-focus="…"`.
-- `support.js` bitte nicht bearbeiten. Sie ist die Runtime, nicht Projektcode.
+- **Alle Inhalte stehen fertig im HTML.** Keine Platzhalter, keine Templates, nichts wird im Browser zusammengebaut. Suchmaschinen und Besucher sehen dasselbe.
+- **Styling inline** über `style="…"`. Der `<style>`-Block im `<head>` enthält nur, was inline nicht geht: `a:hover`, `[hidden]`, `@keyframes`, die zwei Media Queries für die Navigation.
+- **Interaktion über kleines Vanilla-JS** am Seitenende, gesteuert über `data-`-Attribute. Kein jQuery, keine Bibliothek.
+- **`hidden` zum Ein- und Ausblenden**, nie `style.display`. Dafür steht in jedem `<style>`-Block `[hidden] { display: none !important; }` — nötig, weil die Elemente ein Inline-`display` tragen, das `hidden` sonst überstimmt.
 
-Zum Ansehen genügt ein lokaler Server (`python3 -m http.server`), weil `support.js` per `file://` nicht geladen wird.
+### Interaktionsmuster
+
+| Muster | Auszeichnung | Vorkommen |
+| --- | --- | --- |
+| Mobilmenü | `#menubtn` + `#mobilmenu[hidden]`, `[data-close]` | `index.html`, `shop.html` |
+| Akkordeon | `[data-acc][aria-expanded][aria-controls]` → Panel per `hidden` | `index.html` (Selbsttests), `kurse.html` (14 Kurse) |
+| Kursfilter | `[data-filter="Kategorie"]` schaltet `[data-course][data-cat]` | `kurse.html` |
+| Shop-Filter | `[data-cat-btn="key"]` schaltet `[data-product][data-cat]` | `shop.html` |
+| Scroll-Einblendung | `[data-reveal]` + IntersectionObserver | `medical-wellness.html` |
+
+Wichtig beim Akkordeon: die aufklappbaren Texte stehen **immer** im HTML und werden nur per `hidden` verborgen. Nicht auf Erzeugung per JS umstellen — die Inhalte sollen für Google sichtbar bleiben.
 
 ---
 
 ## 2 · Dateien
 
-| Datei | Seite | Logik |
+| Datei | Seite | Interaktion |
 | --- | --- | --- |
-| `index.html` | Startseite | `menuOpen` (Mobilmenü), `openTest` (Selbsttest-Akkordeon) |
-| `training.html` | Training / milon-Zirkel | Props `showTrialBand`, `showBreadcrumb` |
-| `kurse.html` | Kurse | `filter1/2`, `open1/2`; Kursdaten im Array `COURSES` |
-| `medical-wellness.html` | Medical Wellness | `soundOn` (Ambient-Video stumm) |
-| `ueber-uns.html` | Über uns | keine — reines Markup |
-| `shop.html` | Shop | `menuOpen`, `activeCategory`; Produkte im Array in `renderVals()` |
+| `index.html` | Startseite | Mobilmenü, Selbsttest-Akkordeon |
+| `training.html` | Training / milon-Zirkel | keine |
+| `kurse.html` | Kurse | Kategoriefilter + 14 Akkordeons |
+| `rehasport.html` | Rehasport | Mobilmenü |
+| `sauna.html` | Sauna | Mobilmenü, FAQ über `<details>` |
+| `medical-wellness.html` | Medical Wellness | Scroll-Einblendung |
+| `ueber-uns.html` | Über uns | keine |
+| `shop.html` | Shop | Mobilmenü, Kategoriefilter |
 | `impressum.html` | Impressum | keine |
-| `datenschutz.html` | Datenschutzerklärung | keine |
-| `404.html` | Fehlerseite | keine (reines HTML ohne Runtime) |
+| `datenschutz.html` | Datenschutzerklärung | keine (`noindex`) |
+| `404.html` | Fehlerseite | keine |
 
-Dazu `assets/` (26 Bilder), `support.js`, `robots.txt`, `sitemap.xml`.
+Dazu `assets/` (26 Bilder, 2,3 MB), `robots.txt`, `sitemap.xml`.
 
 **Dateinamen nicht umbenennen** — sie stehen in `sitemap.xml`, in den Canonical-Tags und in der Navigation jeder Seite.
 
@@ -70,30 +75,35 @@ Dazu `assets/` (26 Bilder), `support.js`, `robots.txt`, `sitemap.xml`.
 
 ## 3 · Wo welcher Inhalt liegt
 
-**Texte** stehen im Klartext im Markup. Gesuchten Satz einfach über alle Dateien suchen.
+**Texte** stehen im Klartext im Markup. Gesuchten Satz über alle Dateien suchen, ändern, fertig.
 
-**Kursliste** (`kurse.html`): im Array `COURSES` in der Logikklasse. Ein Eintrag:
+**Kurse** (`kurse.html`): 14 `<article data-course data-cat="…">`-Blöcke. Ein neuer Kurs = Block kopieren, Texte ersetzen, `data-cat` auf eine der Kategorien setzen (`Kraft`, `Beweglichkeit`, `Entspannung`, `Mind`) und die `id`/`aria-controls`-Paarung eindeutig halten.
 
-```js
-{ id:'bodymind', cat:'Entspannung', name:'Body & Mind',
-  tagline:'Körper & innere Balance', img:'',
-  desc:'…',
-  bullets:['…','…','…'] }
-```
+**Shop-Produkte** (`shop.html`): `<article data-product data-cat="Gutscheine|Produkte">`-Blöcke, gleiche Vorgehensweise.
 
-`cat` steuert den Filter. `img:''` bedeutet: kein Bild vorhanden, die Kachel nutzt den Text-Fallback. Bild ergänzen = Datei nach `assets/` legen und `img:'assets/dateiname.png'` setzen.
-
-**Shop-Produkte** (`shop.html`): Array `allProducts` in `renderVals()`.
-
-**Navigation** steht in jeder Seite einzeln im `<header>`. Ein neuer Menüpunkt muss in allen acht Seiten ergänzt werden — es gibt kein gemeinsames Layout. Reihenfolge überall: Ihre Gesundheit · Training · Kurse · Medical Wellness · Über uns · Shop · Beratungstermin.
+**Navigation** steht in jeder Seite einzeln im `<header>`. Ein neuer Menüpunkt muss in allen acht Seiten ergänzt werden — es gibt kein gemeinsames Layout. Reihenfolge überall: Ihre Gesundheit · Training · Kurse · Rehasport · Sauna · Medical Wellness · Über uns · Shop · Beratungstermin. Impressum und Datenschutz haben bewusst keine Navigation, nur den Rückweg zur Startseite.
 
 **Footer** ebenso pro Seite. Impressum- und Datenschutz-Link müssen auf **jeder** Seite bleiben — § 5 DDG verlangt ständige Verfügbarkeit.
 
 ---
 
-## 4 · Gestaltung
+## 4 · Suchmaschinen
 
-Wenn du etwas Neues anlegst, halte dich an diese Werte.
+Jede öffentliche Seite trägt: eigenen `<title>` (unter 60 Zeichen), `description` (unter 160), `canonical`, `robots`, Open-Graph-Angaben und strukturierte Daten als JSON-LD.
+
+Die strukturierten Daten bilden einen Graphen. Der Betrieb ist einmal auf der Startseite vollständig beschrieben (`HealthAndBeautyBusiness` mit `@id: https://www.ellevital.com/#studio` — Adresse, Öffnungszeiten, Leistungen, 13 Orte im Einzugsgebiet). Die Unterseiten verweisen darauf per `{"@id": "…#studio"}` statt es zu wiederholen. Bei Änderungen an Adresse, Telefon oder Öffnungszeiten: **Startseite ist die Quelle**, dort ändern.
+
+Pro Unterseite zusätzlich ein `Service`- bzw. `ItemList`-Objekt und ein `BreadcrumbList`.
+
+Suchbegriffe, auf die die Seiten ausgerichtet sind: Frauengesundheit Aalen, Frauenfitness Aalen, Fitnessstudio für Frauen Aalen, Rehasport Aalen, Wechseljahre Beratung Aalen, Beckenbodentraining, Pilates Aalen, Sauna Aalen, Medical Wellness Aalen, Longevity für Frauen.
+
+`&` in `<title>` und `content="…"` immer als `&amp;` schreiben.
+
+**Bilder:** JPEG, längste Kante höchstens 1400 px, Qualität ~0,82. Jedes `<img>` braucht `width`/`height` (verhindert Layout-Sprünge) und alles unterhalb des ersten Bildschirms `loading="lazy" decoding="async"`.
+
+---
+
+## 5 · Gestaltung
 
 | Rolle | Wert |
 | --- | --- |
@@ -108,10 +118,14 @@ Wenn du etwas Neues anlegst, halte dich an diese Werte.
 
 Schriften: **Cormorant Garamond** für Überschriften und Zitate (500/600, oft kursiv), **Mulish** für Fließtext, **Jost** für Eyebrows und Navigation. Eyebrows sind Großbuchstaben mit `letter-spacing:6px`.
 
+**Kontrast prüfen, nicht schätzen.** Kleiner Text (unter 18,7 px) braucht mindestens **4,5:1** gegen seinen Hintergrund — das gilt besonders für die Impressum- und Datenschutz-Links im Fuß, die nach § 5 DDG nicht nur vorhanden, sondern auch auffindbar sein müssen. Gedämpfte Grautöne auf dunklem Grund fallen hier regelmäßig durch: `#8A8077` auf `#322E2B` erreicht nur 3,5:1. Jede Fuß-Palette hat einen helleren Ton, der passt (`#CFC8BF`, `#B5AD9E`, `#B8AE9D`) — den nehmen, statt einen neuen Farbwert zu erfinden.
+
 Radien: 6–12 px bei Karten, `999px` bei Buttons. Layout überwiegend `display:flex` / `grid` mit `gap`, Größen fluid über `clamp()`.
 
-**Responsiv ohne Media Queries.** Die Seiten kommen fast ohne Breakpoints aus. Stattdessen:
+**Responsiv ohne Media Queries.** Die Seiten kommen fast ohne Breakpoints aus (Ausnahme: die zwei Regeln, die Desktop-Navigation und Hamburger bei 880 px umschalten). Stattdessen:
 
+- **Der Kopf braucht `min-height`, nie `height`.** Der innere Container trägt `flex-wrap: wrap` — mit fester Höhe bricht die Navigation in eine zweite Zeile, die außerhalb des Kopfs liegt und ohne Hintergrund über dem Inhalt schwebt. Mit `min-height:76px` wächst der Kopf statt zu überlaufen.
+- **Der Nav-Breakpoint muss zur Zahl der Einträge passen.** Neun Einträge brauchen rund 1100 px in einer Zeile (Nav + Logo 142 px + Padding 74 px), deshalb schaltet der Hamburger erst ab 1181 px auf die Desktop-Navigation um (`max-width: 1180px` / `min-width: 1181px`). Kommt ein Menüpunkt dazu, den Bedarf neu messen (`nav.scrollWidth` + Logo + Padding) und den Wert mit Reserve darüber setzen — sonst entsteht ein Band von Fensterbreiten, in dem die Leiste umbricht und der Kopf doppelt so hoch wird. 1024 px ist die kritische Breite: iPad quer und geteilte Fenster auf großen Displays landen genau dort. Bei so langer Navigation ist irgendwann ein Untermenü die bessere Antwort als ein noch höherer Breakpoint.
 - Mehrspaltige Grids immer `repeat(auto-fit, minmax(280px, 1fr))` — nie `repeat(3, 1fr)` oder `1fr 1fr`. Nur so bricht die Spalte auf dem Handy um.
 - Seitliche Innenabstände fluid: `padding: 48px clamp(20px, 4vw, 64px)` statt `padding: 48px 64px`.
 - **Jede** mehrgliedrige Flex-Reihe braucht `flex-wrap: wrap` plus `gap` — nicht nur Header und Button-Reihen, sondern auch Kennzahlen, Icon-Text-Paare, Footer-Spalten und Chip-Listen. Eine `nowrap`-Reihe mit mehr als zwei Kindern ragt auf dem Handy heraus und lässt die ganze Seite seitlich scrollen.
@@ -119,11 +133,11 @@ Radien: 6–12 px bei Karten, `999px` bei Buttons. Layout überwiegend `display:
 
 Deutsche Komposita wie „Ganzkörpertraining" setzen eine hohe Mindestbreite — deshalb die Mindestwerte nicht unter 240 px drücken. Nach jeder Layout-Änderung bei 390 px Breite prüfen, dass nichts seitlich herausragt.
 
-Die Unterseiten Training, Kurse, Medical Wellness und Über uns kommen aus separaten Entwürfen und haben eigene, leicht abweichende Paletten. Innerhalb einer Seite konsistent bleiben, nicht seitenübergreifend vereinheitlichen — es sei denn, das ist ausdrücklich die Aufgabe.
+Die Unterseiten Training, Kurse, Medical Wellness, Über uns und Sauna kommen aus separaten Entwürfen und haben eigene, leicht abweichende Paletten — die Sauna-Seite arbeitet mit Gold `#B7924F` und Oliv `#6E7358` auf `#F7F3EC`. Innerhalb einer Seite konsistent bleiben, nicht seitenübergreifend vereinheitlichen — es sei denn, das ist ausdrücklich die Aufgabe.
 
 ---
 
-## 5 · Externe Ziele
+## 6 · Externe Ziele
 
 | Zweck | URL |
 | --- | --- |
@@ -139,32 +153,37 @@ Externe Links immer mit `target="_blank" rel="noopener"`.
 
 Kontakt: ellevital GmbH, Eduard-Pfeiffer-Str. 13, 73430 Aalen, 07361 62850, info@ellevital.com
 
----
-
-## 6 · Offene Punkte
-
-- **14 Kursfotos fehlen.** Sie waren in der Quelldatei nie enthalten. Betroffen: Body & Mind, Body Workout, Fascial Stretch, Formen & Straffen, Gesichts-Yoga, Medical Yoga, Mobility, Morning Mix, Pilates, Rücken & Gelenke, Step & Tone, Vitalzirkel, Brain Balance, Cardio Dance. Bis dahin greift der Text-Fallback.
-- **Wochenplan-PDF fehlt.** Der Button auf `kurse.html` verweist ersatzweise auf `mailto:info@ellevital.com`. Sobald das PDF in `assets/` liegt, auf die Datei umstellen.
-- **Ambient-Video fehlt.** Die beiden `<video>`-Elemente auf `medical-wellness.html` lagen auf der alten WordPress-Installation und hätten bei der Domain-Umstellung ins Leere gezeigt. Sie zeigen jetzt das Poster-Bild `assets/mw-8.jpg`. Sobald die MP4-Datei in `assets/` liegt, `src="assets/…"` an beiden Elementen ergänzen.
-- **Foto Dr. Ospina** auf `index.html` lädt noch von `i0.wp.com/ellevital.com/…`, also über das Bild-CDN der alten Seite. Funktioniert derzeit, sollte aber nach `assets/` geholt werden.
-- **Serverseitiges Rendering.** Die Seiten bauen sich im Browser auf. Für Besucher unkritisch, aber Suchmaschinen indexieren solche Seiten schlechter. Wenn Sichtbarkeit wichtig wird: gerenderten Zustand ins HTML schreiben.
-- **Shop.** `shop.html` ist ein Katalog ohne Bezahlung; die Buttons zeigen „Bald verfügbar". Sobald der Anbieter feststeht, dort verlinken.
+Öffnungszeiten: Mo/Mi/Fr 8:30–21:30 · Di/Do 8:30–12:00 und 15:00–21:30 · Sa/So 10:00–15:00
 
 ---
 
-## 7 · Vor dem Push prüfen
+## 7 · Offene Punkte
+
+- **Rehasport ohne Bildmaterial.** `rehasport.html` ist textgeführt aufgebaut, weil die Bilder der alten Seite reine Canva-Grafiken mit eingebranntem Text waren. Echte Aufnahmen aus den Kursen würden die Seite deutlich stärker machen — dann Hero-Bild und je ein Bild pro Angebot ergänzen.
+- **Rehasport-Video fehlt.** Auf der alten Seite lag `VIDEO-rehasport.mp4`. Falls gewünscht: Datei nach `assets/` legen und einen Abschnitt anlegen.
+- **14 Kursfotos fehlen.** Sie waren in der Quelldatei nie enthalten; die Kacheln zeigen nur Text. Betroffen: Body & Mind, Body Workout, Fascial Stretch, Formen & Straffen, Gesichts-Yoga, Medical Yoga, Mobility, Morning Mix, Pilates, Rücken & Gelenke, Step & Tone, Vital Zirkel, Brain Balance, Cardio Dance Mix.
+- **Wochenplan ist keine Datei.** Der Abschnitt auf `kurse.html` zeigt den Plan als Bild (`assets/kurse-3-opt.jpg`); es gibt bewusst keinen Download und keine PDF-Anfrage, der Button führt zum Beratungsgespräch. Bei neuem Plan einfach das Bild ersetzen.
+- **Ambient-Video entfernt.** Es lag auf der alten WordPress-Installation. Soll es zurück: MP4 nach `assets/` legen und den Abschnitt neu anlegen.
+- **Shop ohne Bezahlung.** `shop.html` ist ein Katalog, die Buttons zeigen „Bald verfügbar". Sobald der Anbieter feststeht, dort verlinken.
+- **Schreibweise der Straße prüfen.** Impressum und die neueren Seiten schreiben „Eduard-Pfeiffer-Straße“ (zwei f), die alte WordPress-Seite schrieb „Eduard Pfeifer Strasse“. Maßgeblich ist die Handelsregister-Schreibweise — einmal verbindlich klären und überall gleich setzen.
+- **Google-Unternehmensprofil ist veraltet.** Für die lokale Sichtbarkeit der wirksamste offene Punkt — wirkt stärker als jede weitere Änderung an der Website.
+
+---
+
+## 8 · Vor dem Push prüfen
 
 - Öffnet die geänderte Seite ohne Fehler in der Konsole?
-- Sind Impressum- und Datenschutz-Link noch im Footer?
+- Sind Impressum- und Datenschutz-Link noch im Footer — und erreichen sie mindestens 4,5:1 Kontrast?
 - Zeigen alle Beratungstermin-Buttons auf Calendly, keiner auf `#`?
-- Kein `href` **oder `src`** auf `ellevital.com` — interne Ziele sind relativ (`index.html`).
+- Kein `href` **oder `src`** auf `ellevital.com` oder `i0.wp.com` — interne Ziele sind relativ (`index.html`), Bilder liegen in `assets/`.
 - Läuft der Header bei 390 px Breite nicht aus dem Bild?
 - Alle `assets/…`-Pfade existieren wirklich?
-- Bei neuer Seite: `sitemap.xml` ergänzen, Navigation aller Seiten erweitern.
+- Enthält die Seite noch `{{`, `<sc-`, `<x-dc>` oder `support.js`? Dann ist Template-Rest übrig geblieben — muss raus.
+- Bei neuer Seite: `sitemap.xml` ergänzen, Navigation aller Seiten erweitern, `title`/`description`/`canonical`/JSON-LD setzen.
 
 ---
 
-## 8 · Deployment
+## 9 · Deployment
 
 | | |
 | --- | --- |

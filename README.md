@@ -17,7 +17,9 @@ Deployment über **IONOS Deploy Now**.
 | `datenschutz.html` | Datenschutzerklärung |
 | `404.html` | Fehlerseite |
 
-Dazu: `assets/` (Bilder, Logo, QR-Code), `support.js` (Runtime), `robots.txt`, `sitemap.xml`.
+Dazu: `assets/` (Bilder, Logo, QR-Code), `robots.txt`, `sitemap.xml`.
+
+Reines statisches HTML — kein Build, kein Framework, keine Runtime. Jede Datei ist für sich lesbar und lässt sich direkt bearbeiten. Details in `CLAUDE.md`.
 
 ## Deployment (IONOS Deploy Now)
 
